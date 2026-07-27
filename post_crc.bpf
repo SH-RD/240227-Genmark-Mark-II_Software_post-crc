@@ -1,0 +1,9 @@
+USEUNIT("post_crc.cpp");
+USEUNIT("..\..\..\Diversen\Protocol\sh_crc.c");
+USEUNIT("..\..\..\Diversen\Protocol\sh_generic.c");
+USE("..\Common\Inc\app_header.h", File);
+USE("..\Common\Inc\flash_layout.h", File);
+//---------------------------------------------------------------------------
+This file is used by the project manager only and should be treated like the project file
+
+main
