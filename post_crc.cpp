@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include "sh_crc.h"
 #include "app_header.h"
@@ -22,6 +23,7 @@ int main(int argc, char* argv[])
   dword crc;
   app_header_t* app_hdr  = (app_header_t*) buffer;
   Sh_Timestamp_t ts;
+//SYSTEMTIME st;
 
 
   // Check command line
@@ -68,8 +70,8 @@ int main(int argc, char* argv[])
   // Build header structure
   memset( buffer, 0x00, sizeof(buffer) );
 
-  get_compile_datetime( &ts, __DATE__, __TIME__ );
-  sync_timestamp_fields( &ts );
+  ts.time = time(NULL);
+  sync_timestamp_time( &ts );
 
   app_hdr->magic    = HDR_MAGIC_VALUE;
   app_hdr->valid    = 1;
