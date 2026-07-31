@@ -9,6 +9,7 @@
 #include "sh_crc.h"
 #include "app_header.h"
 #include "flash_layout.h"
+#include "boot_status.h"
 
 
 //---------------------------------------------------------------------------
@@ -23,6 +24,7 @@ int main(int argc, char* argv[])
   dword crc;
   app_header_t* app_hdr  = (app_header_t*) buffer;
   Sh_Timestamp_t ts;
+  struct tm *tblock;
 //SYSTEMTIME st;
 
 
@@ -70,14 +72,19 @@ int main(int argc, char* argv[])
   // Build header structure
   memset( buffer, 0x00, sizeof(buffer) );
 
-  ts.time = time(NULL);
-  sync_timestamp_time( &ts );
+  time_t t = time(NULL);
+  tblock = localtime( &t );
+  convert_ts_tm( &ts, tblock );
+//ts.time = t;
+//sync_timestamp_time( &ts );
 
-  app_hdr->magic    = HDR_MAGIC_VALUE;
-  app_hdr->valid    = 1;
-  app_hdr->size     = size;
-  app_hdr->crc      = crc;
-  app_hdr->version  = ts.days;
+  app_hdr->magic        = HDR_MAGIC_VALUE;
+  app_hdr->valid        = 1;
+  app_hdr->size         = size;
+  app_hdr->crc          = crc;
+//app_hdr->timestamp    = ts.days;
+  app_hdr->timestamp    = ts.time;
+  app_hdr->boot_status  = BOOT_STATE_RESET;
 
   // Write header
   len = fwrite( buffer, 1, sizeof(app_header_t), file );
